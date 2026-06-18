@@ -34,14 +34,21 @@ command -v jq >/dev/null 2>&1 || { echo "jq is required (brew install jq)"; exit
 # Owner-facing endpoint paths. VERIFY THESE AGAINST THE LIVE SERVER before the
 # demo — they are the spec's owner actions, but the exact routes/verbs come from
 # the StablePro Wallet Agent Server and must be confirmed when wiring.
+#
+# NOTE: the routes carrying "{id}" must NOT use ${VAR:=default}, because the "}"
+# in "{id}" prematurely closes the parameter expansion (the default would become
+# ".../{id"). Use defep, which assigns a literal (brace-safe) default only when
+# the var is unset — so a .env override still wins.
 # ---------------------------------------------------------------------------
+defep() { local n="$1" d="$2"; [[ -n "${!n:-}" ]] || printf -v "$n" '%s' "$d"; }
+
 : "${EP_PENDING:=/owner/mandates?state=pending_owner_approval}"  # GET parked approvals
 : "${EP_MANDATE:=/owner/mandates}"                               # GET  /owner/mandates/{id}
-: "${EP_APPROVE:=/owner/mandates/{id}/approve}"                  # POST -> active
-: "${EP_DENY:=/owner/mandates/{id}/deny}"                        # POST {reason} -> revoked
-: "${EP_REVOKE:=/owner/mandates/{id}/revoke}"                    # POST kill-switch -> revoked
-: "${EP_UNFREEZE:=/owner/mandates/{id}/unfreeze}"                # POST suspended -> active
-: "${EP_AUDIT:=/owner/audit}"                                    # GET tamper-evident audit trail (PENDING — confirm route)
+defep EP_APPROVE  '/owner/mandates/{id}/approve'                 # POST -> active
+defep EP_DENY     '/owner/mandates/{id}/deny'                    # POST {reason} -> revoked
+defep EP_REVOKE   '/owner/mandates/{id}/revoke'                  # POST kill-switch -> revoked
+defep EP_UNFREEZE '/owner/mandates/{id}/unfreeze'                # POST suspended -> active
+: "${EP_AUDIT:=/owner/audit}"                                    # GET tamper-evident audit trail (served by the stub; confirm on live server)
 
 # api METHOD PATH [json-body]
 api() {

@@ -1,0 +1,14 @@
+{
+  "name": "aergap-demo-stub-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Dependency-free stub of the StablePro Wallet Agent Server for the Aergap demo (localhost:9740). Mock payer.v1 policy engine: accept / deny / requires_owner_approval.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
