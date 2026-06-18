@@ -2,6 +2,7 @@ import './styles.css'
 import { resolveToken, fetchMessages, openEvents } from './api.js'
 import { SAMPLE } from './sample.js'
 import { classify, decisionModel, parseIntent, parseResult, OUTCOME_META, controlLabel } from './policy.js'
+import { initOperator } from './operator.js'
 
 // ---- tiny DOM helper -------------------------------------------------------
 const el = (tag, attrs = {}, ...kids) => {
@@ -200,6 +201,8 @@ async function go() {
   closeWs()
   const mode = $('mode').value
   S.sessionFilter = $('session').value.trim()
+  // Operator phone (Pane 3): sample seeds offline cards; live polls owner endpoints.
+  initOperator({ mode, token: $('owner-token').value.trim() })
   try {
     if (mode === 'sample') { renderTranscript(SAMPLE); setStatus('sample loaded', 'ok'); return }
     const token = await resolveToken($('token').value)
@@ -218,8 +221,8 @@ async function go() {
 
 // persist a couple of fields
 const LS = 'aergap-web-ui'
-function loadCfg() { try { const c = JSON.parse(localStorage.getItem(LS) || '{}'); if (c.mode) $('mode').value = c.mode; if (c.session) $('session').value = c.session; if (c.token) $('token').value = c.token } catch {} }
-function saveCfg() { localStorage.setItem(LS, JSON.stringify({ mode: $('mode').value, session: $('session').value, token: $('token').value })) }
+function loadCfg() { try { const c = JSON.parse(localStorage.getItem(LS) || '{}'); if (c.mode) $('mode').value = c.mode; if (c.session) $('session').value = c.session; if (c.token) $('token').value = c.token; if (c.ownerToken) $('owner-token').value = c.ownerToken } catch {} }
+function saveCfg() { localStorage.setItem(LS, JSON.stringify({ mode: $('mode').value, session: $('session').value, token: $('token').value, ownerToken: $('owner-token').value })) }
 
 $('go').addEventListener('click', () => { saveCfg(); go() })
 $('mode').addEventListener('change', saveCfg)

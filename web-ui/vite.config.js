@@ -6,6 +6,9 @@ import { defineConfig, loadEnv } from 'vite'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const target = env.DASHBOARD_URL || env.VITE_DASHBOARD_URL || 'http://127.0.0.1:9119'
+  // The owner endpoints live on the AGENT server (stub :9740, or live server
+  // after the Stage-2 swap) — a different origin than the Hermes dashboard.
+  const ownerTarget = env.AGENT_SERVER_URL || env.VITE_AGENT_SERVER_URL || 'http://127.0.0.1:9740'
 
   return {
     server: {
@@ -31,6 +34,14 @@ export default defineConfig(({ mode }) => {
           rewrite: (p) => p.replace(/^\/__dash/, '') || '/',
           configure: (proxy) => {
             proxy.on('proxyReq', (r) => { try { r.setHeader('origin', target) } catch {} })
+          },
+        },
+        // Operator/owner actions -> the AGENT server (owner endpoints).
+        '/owner': {
+          target: ownerTarget,
+          changeOrigin: true,
+          configure: (proxy) => {
+            proxy.on('proxyReq', (r) => { try { r.setHeader('origin', ownerTarget) } catch {} })
           },
         },
       },

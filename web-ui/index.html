@@ -3,12 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hermes · Aergap — policy view</title>
+    <title>Aergap · policy dashboard</title>
   </head>
   <body>
     <header id="bar">
-      <span class="brand">HERMES<span class="sep">·</span><span class="gov">AERGAP</span></span>
-      <span class="tag">read-only policy view</span>
+      <span class="brand">
+        <!-- logo slot: drop web-ui/public/aergap-logo.svg to replace the mark -->
+        <span class="logo-slot"><img id="brand-logo" src="/aergap-logo.svg" alt="Aergap"
+          onerror="this.remove()" /><span class="mark">Æ</span></span>
+        <b>AERGAP</b>
+        <span class="sub">agentic trust fabric</span>
+      </span>
+      <span class="tag">policy dashboard · read-only</span>
       <span class="spacer"></span>
       <label class="mode">
         <select id="mode">
@@ -18,24 +24,34 @@
         </select>
       </label>
       <input id="session" placeholder="session id (replay/live filter)" />
-      <input id="token" placeholder="dashboard token (blank = auto)" />
+      <input id="token" class="tok" placeholder="dashboard token" />
+      <input id="owner-token" class="tok" placeholder="operator token" />
       <button id="go">Connect</button>
       <span id="status" class="status">idle</span>
     </header>
 
     <main id="split">
       <section id="chat" class="panel">
-        <div class="panel-head">Hermes</div>
+        <div class="panel-head">Agent activity <span class="obs">· observed by the fabric</span></div>
         <div id="chat-log" class="log"></div>
       </section>
       <section id="policy" class="panel right">
-        <div class="panel-head">Aergap · policy &amp; audit</div>
+        <div class="panel-head">Policy &amp; audit</div>
         <div id="policy-body" class="policy-body">
           <div class="empty">No evaluated transaction yet. The triptych appears here:
             <em>intent · policy evaluation · audit record.</em></div>
         </div>
       </section>
     </main>
+
+    <!-- Operator surface (Pane 3): floating phone, Aergap-branded -->
+    <div class="phone" id="operator-phone">
+      <div class="frame">
+        <div class="notch"></div>
+        <div class="phbar"><span class="pd mock" id="ph-dot"></span> Operator <span class="right" id="ph-src">sample</span></div>
+        <div class="phbody" id="ph-body"><div class="phidle">No actions pending</div></div>
+      </div>
+    </div>
 
     <script type="module" src="/src/main.js"></script>
   </body>
