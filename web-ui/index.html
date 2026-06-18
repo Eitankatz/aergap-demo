@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hermes · Aergap — policy view</title>
+  </head>
+  <body>
+    <header id="bar">
+      <span class="brand">HERMES<span class="sep">·</span><span class="gov">AERGAP</span></span>
+      <span class="tag">read-only policy view</span>
+      <span class="spacer"></span>
+      <label class="mode">
+        <select id="mode">
+          <option value="sample" selected>Sample (offline)</option>
+          <option value="live">Live (WebSocket)</option>
+          <option value="replay">Replay (session)</option>
+        </select>
+      </label>
+      <input id="session" placeholder="session id (replay/live filter)" />
+      <input id="token" placeholder="dashboard token (blank = auto)" />
+      <button id="go">Connect</button>
+      <span id="status" class="status">idle</span>
+    </header>
+
+    <main id="split">
+      <section id="chat" class="panel">
+        <div class="panel-head">Hermes</div>
+        <div id="chat-log" class="log"></div>
+      </section>
+      <section id="policy" class="panel right">
+        <div class="panel-head">Aergap · policy &amp; audit</div>
+        <div id="policy-body" class="policy-body">
+          <div class="empty">No evaluated transaction yet. The triptych appears here:
+            <em>intent · policy evaluation · audit record.</em></div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
